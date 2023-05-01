@@ -1,0 +1,9 @@
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
+
+export function formatUtc(utcString: string, format = 'YYYY/MM/DD hh:mm:ss') {
+  const utcRes = dayjs.utc(utcString).utcOffset(8).format(format)
+  return utcRes
+}
