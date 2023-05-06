@@ -10,3 +10,9 @@ export function getEntireDepartment() {
     url: 'department/list'
   })
 }
+
+export function getEntireMenuList() {
+  return ysRequest.post({
+    url: 'menu/list'
+  })
+}
