@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { loginRequest, loginUserInfo, UserMenuById } from '@/service/login/login'
 import type { IAccount } from '@/types'
 import { localCache } from '@/utils/cache'
-import { mapMenuToRoutes } from '@/utils/mapMenu'
+import { mapMenuToRoutes, mapMenuToPermission } from '@/utils/mapMenu'
 import { LOGIN_TOKEN } from '@/globle/constant'
 import router from '@/router'
 import useMain from '../main/main'
@@ -12,18 +12,22 @@ interface ILoginState {
   token: string
   userInfo: any
   userMenu: any
+  permission: string[]
 }
 
 const useLogin = defineStore('login', {
   state: (): ILoginState => ({
     token: '',
     userInfo: {},
-    userMenu: []
+    userMenu: [],
+    permission: []
   }),
   actions: {
     async getLogin(account: IAccount) {
       const loginRes = await loginRequest(account)
       // 1.获取token等信息
+      console.log(loginRes)
+
       const id = loginRes.data.id
       const name = loginRes.data.name
       this.token = loginRes.data.token
@@ -32,19 +36,27 @@ const useLogin = defineStore('login', {
 
       // 3.获取登录用户信息
       const userInfoRes = await loginUserInfo(id)
+      console.log(userInfoRes)
+
       const userInfo = userInfoRes.data
       this.userInfo = userInfo
       localCache.setCache('userinfo', userInfo)
 
       // 4.获取用户菜单
       const userMenuRes = await UserMenuById(id)
+      console.log(userMenuRes)
+
       const userMenu = userMenuRes.data
       this.userMenu = userMenu
       localCache.setCache('usermenu', userMenu)
 
-      // 获取全部角色好部门列表
+      // 获取全部角色、部门列表
       const mainStore = useMain()
       mainStore.fetchEntireDataAction()
+
+      // 获取用户按钮权限
+      const permission = mapMenuToPermission(userMenu)
+      this.permission = permission
 
       // 5.动态添加路由
       const routes = mapMenuToRoutes(userMenu)
@@ -67,6 +79,10 @@ const useLogin = defineStore('login', {
         // 刷新请求数据
         const mainStore = useMain()
         mainStore.fetchEntireDataAction()
+
+        // 获取用户按钮权限
+        const permission = mapMenuToPermission(userMenu)
+        this.permission = permission
         // 当页面有上面的值时，页面刷新保持路由注册
         const routes = mapMenuToRoutes(userMenu)
         routes.forEach((route) => router.addRoute('main', route))

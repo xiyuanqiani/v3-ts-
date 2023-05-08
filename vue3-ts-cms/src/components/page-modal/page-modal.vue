@@ -114,6 +114,7 @@ function handleConfirm() {
   // 有树形控件的id
   if (props.otherInfo) {
     infoData = { ...infoData, ...props.otherInfo }
+    console.log('debug', infoData)
   }
   if (!isNewRef.value && editData) {
     //修改

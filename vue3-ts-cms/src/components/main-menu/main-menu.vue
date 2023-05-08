@@ -57,7 +57,7 @@ function onItenRouter(iten: any) {
 const route = useRoute()
 const defaultActive = computed(() => {
   const pathMenu = mapPathToMenu(route.path, userMenu)
-  return pathMenu.id + ''
+  return pathMenu?.id + ''
 })
 </script>
 

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import useMain from '../main'
 import {
   postUsersListData,
   deleteUserById,
@@ -59,6 +60,9 @@ const useSystem = defineStore('system', {
       const res = await deletePageById(pageName, id)
       console.log(res)
       this.postPageListAction(pageName, { size: 10, offset: 0 })
+
+      const mainStore = useMain()
+      mainStore.fetchEntireDataAction()
     },
     async newPageAction(pageName: string, pageInfo: any) {
       // 1.新增用户
@@ -66,6 +70,9 @@ const useSystem = defineStore('system', {
       console.log(newPageRes)
       // 2.重新发起请求
       this.postPageListAction(pageName, { size: 10, offset: 0 })
+      // 3.重新获取完整数据
+      const mainStore = useMain()
+      mainStore.fetchEntireDataAction()
     },
     async editPageAction(pageName: string, id: number, userInfo: any) {
       // 1.修改用户
@@ -74,6 +81,9 @@ const useSystem = defineStore('system', {
 
       // 2.重新发起请求
       this.postPageListAction(pageName, { size: 10, offset: 0 })
+      // 3.重新获取完整数据
+      const mainStore = useMain()
+      mainStore.fetchEntireDataAction()
     }
   }
 })

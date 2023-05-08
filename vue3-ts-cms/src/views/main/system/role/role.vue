@@ -42,7 +42,7 @@ import type { ElTree } from 'element-plus'
 import { mapMenuListToIds } from '@/utils/mapMenu'
 
 const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
-const { modalRef, handleAddClick, handleEditClick } = usePageModal(editCallback)
+const { modalRef, handleAddClick, handleEditClick } = usePageModal(newCallback, editCallback)
 
 // 获取全部菜单数据
 import { storeToRefs } from 'pinia'
@@ -59,6 +59,11 @@ function handleCheckClick(data1: any, data2: any) {
 }
 
 const treeRef = ref<InstanceType<typeof ElTree>>()
+function newCallback() {
+  nextTick(() => {
+    treeRef.value?.setCheckedKeys([])
+  })
+}
 function editCallback(itemData: any) {
   nextTick(() => {
     const ids = mapMenuListToIds(itemData.menuList)

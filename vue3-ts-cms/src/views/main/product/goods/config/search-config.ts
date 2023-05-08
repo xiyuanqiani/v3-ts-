@@ -1,4 +1,5 @@
 const searchConfig = {
+  pageName: 'goods',
   formItems: [
     { type: 'input', prop: 'name', label: '商品名称', placeholder: '请输入商品名称' },
 

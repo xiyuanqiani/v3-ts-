@@ -18,7 +18,7 @@
       <el-dropdown>
         <div class="user-info">
           <el-avatar :size="35" src="" />
-          <div class="name">777777</div>
+          <div class="name">{{ userInfo.name }}</div>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
@@ -46,6 +46,10 @@ import { LOGIN_TOKEN } from '@/globle/constant'
 
 import { localCache } from '@/utils/cache'
 import { useRouter } from 'vue-router'
+import useLogin from '@/stores/login/login'
+import { storeToRefs } from 'pinia'
+const loginStore = useLogin()
+const { userInfo } = storeToRefs(loginStore)
 
 const router = useRouter()
 function handleExit() {

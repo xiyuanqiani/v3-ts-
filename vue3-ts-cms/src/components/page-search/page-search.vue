@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="search" v-if="isQuery">
     <!-- 搜索表单 -->
     <el-form label-width="80" :model="searchForm" ref="formRef">
       <el-row :gutter="20">
@@ -51,14 +51,19 @@
 <script setup lang="ts">
 import type { ElForm } from 'element-plus'
 import { reactive, ref } from 'vue'
+import usePermission from '@/hooks/usePermission'
 
 // 部门search配置
 interface IProps {
   searchConfig: {
+    pageName: string
     formItems: any[]
   }
 }
 const props = defineProps<IProps>()
+
+// 判断是否有查询按钮权限
+const isQuery = usePermission(`${props.searchConfig.pageName}:query`)
 
 const formRef = ref<InstanceType<typeof ElForm>>()
 const initialForm: any = {}

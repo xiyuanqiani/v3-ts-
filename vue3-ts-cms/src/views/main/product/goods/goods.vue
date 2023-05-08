@@ -27,7 +27,6 @@ import searchConfig from './config/search-config'
 import pageContent from '@/components/page-content/page-content.vue'
 import contentConfig from './config/content-config'
 import usePageContent from '@/hooks/usePageContent'
-import usePageModal from '@/hooks/usePageModal'
 
 const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
 </script>

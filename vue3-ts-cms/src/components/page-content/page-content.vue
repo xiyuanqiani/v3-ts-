@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
       <h3 class="title">{{ contentConfig.header?.title ?? '数据列表' }}</h3>
-      <el-button type="primary" @click="handleAddUser">{{
+      <el-button type="primary" @click="handleAddUser" v-if="isCreate">{{
         contentConfig.header?.btnTitle ?? '新增数据'
       }}</el-button>
     </div>
@@ -27,6 +27,7 @@
             <el-table-column align="center" v-bind="item">
               <template #default="scope">
                 <el-button
+                  v-if="isUpdate"
                   size="small"
                   icon="Edit"
                   type="primary"
@@ -35,6 +36,7 @@
                   >修改</el-button
                 >
                 <el-button
+                  v-if="isDelete"
                   size="small"
                   icon="Delete"
                   type="danger"
@@ -81,6 +83,7 @@ import useSystem from '@/stores/main/system/system'
 import { formatUtc } from '@/utils/format'
 import { storeToRefs } from 'pinia'
 import { ref, defineProps } from 'vue'
+import usePermission from '@/hooks/usePermission'
 
 interface IProp {
   contentConfig: {
@@ -95,9 +98,24 @@ interface IProp {
 }
 const props = defineProps<IProp>()
 
+// 判断是否有按钮权限
+const isCreate = usePermission(`${props.contentConfig.pageName}:create`)
+const isDelete = usePermission(`${props.contentConfig.pageName}:delete`)
+const isUpdate = usePermission(`${props.contentConfig.pageName}:update`)
+const isQuery = usePermission(`${props.contentConfig.pageName}:query`)
+
 const systemStore = useSystem()
 const currentPage = ref(1)
 const pageSize = ref(10)
+//调用了增、删、该后页数回到1
+systemStore.$onAction(({ name, after }) => {
+  after(() => {
+    if (name === 'newPageAction' || name === 'editPageAction' || name === 'deletePageByIdAction') {
+      currentPage.value = 1
+    }
+  })
+})
+
 // 1.发起action请求
 fetchPageList()
 // 2.拿到数据
@@ -114,6 +132,7 @@ function handleCurrentChange() {
 
 // 定义一个函数发网络请求
 function fetchPageList(searchForm: any = {}) {
+  if (!isQuery) return
   const size = pageSize.value
   const offset = (currentPage.value - 1) * size
   const pageInfo = { size, offset }

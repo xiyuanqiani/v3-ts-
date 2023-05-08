@@ -6,7 +6,6 @@
     </div>
     <div class="table">
       <el-table :data="usersList" border style="width: 100%">
-        <!-- selection未生效？？？？？？？？ -->
         <el-table-column type="selection" width="50" />
         <el-table-column align="center" type="index" label="序号" width="60" />
         <el-table-column align="center" prop="name" label="用户名" width="150" />
@@ -14,7 +13,12 @@
         <el-table-column align="center" prop="cellphone" label="手机号码" width="150" />
         <el-table-column align="center" prop="enable" label="状态" width="100">
           <template #default="scope">
-            <el-button size="small" :type="scope.row.enable === 1 ? 'primary' : 'danger'" plain>
+            <el-button
+              @click="changeEnable(scope.row)"
+              size="small"
+              :type="scope.row.enable === 1 ? 'primary' : 'danger'"
+              plain
+            >
               {{ scope.row.enable === 1 ? '启用' : '禁用' }}
             </el-button>
           </template>
@@ -110,6 +114,14 @@ function handleAddUser() {
 }
 function handleEditUser(itemData: any) {
   emit('editUser', itemData)
+}
+
+function changeEnable(userInfo: any) {
+  if (userInfo.enable === 1) {
+    userInfo.enable = 0
+  } else {
+    userInfo.enable = 1
+  }
 }
 
 defineExpose({

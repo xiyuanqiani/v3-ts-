@@ -33,7 +33,7 @@ router.beforeEach((to) => {
   }
   // 如果去的是main，就跳转到第一次菜单的url
   if (to.path === '/main') {
-    return firstMenu.url
+    return firstMenu?.url
   }
 })
 

@@ -37,13 +37,15 @@ export function mapMenuToRoutes(userMenu: any[]) {
 }
 /**
  *根据路径去匹配显示的菜单
- * @params 需要匹配的路径
+ * @path 需要匹配的路径
  * @userMenu 所有的菜单
  */
 export function mapPathToMenu(path: string, userMenu: any[]) {
   for (const menu of userMenu) {
     for (const subMenu of menu.children) {
-      if (subMenu.url === path) return subMenu
+      if (subMenu.url === path) {
+        return subMenu
+      }
     }
   }
 }
@@ -81,4 +83,19 @@ export function mapMenuListToIds(menuList: any[]) {
   }
   recurseId(menuList)
   return ids
+}
+
+export function mapMenuToPermission(menuList: any[]) {
+  const permission: string[] = []
+  function recurseGetPermission(menus: any[]) {
+    for (const item of menus) {
+      if (item.type === 3) {
+        permission.push(item.permission)
+      } else {
+        recurseGetPermission(item.children ?? [])
+      }
+    }
+  }
+  recurseGetPermission(menuList)
+  return permission
 }
